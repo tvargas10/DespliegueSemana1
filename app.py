@@ -1,3 +1,4 @@
+
 import dash
 from dash import dcc
 from dash import html
@@ -5,7 +6,7 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
-import datetime as dt
+import datetime as dt 
 
 
 
@@ -22,10 +23,24 @@ app.config.suppress_callback_exceptions = True
 # Load data from csv
 def load_data():
     # To do: Completar la función 
+    nombre_archivo = 'datos_energia.csv'  # Reemplaza 'tu_archivo.csv' con la ruta de tu archivo CSV
+    try:
+        dataframe = pd.read_csv(nombre_archivo)
+        # Convierte la columna "Time" a formato datetime usando pd.to_datetime()
+        dataframe['time'] = pd.to_datetime(dataframe['time'])
+        dataframe = dataframe.set_index('time')
+        return dataframe
+    except FileNotFoundError:
+        print(f"El archivo {nombre_archivo} no se encontró.")
+        return None
+    except Exception as e:
+        print(f"Ocurrió un error al cargar el archivo CSV: {e}")
+        return None
     
 
 # Cargar datos
 data = load_data()
+print(data.head())
 
 # Graficar serie
 def plot_series(data, initial_date, proy):
